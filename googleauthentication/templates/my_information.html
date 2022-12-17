@@ -1,0 +1,138 @@
+<!doctype html>
+{% load static %}
+
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% bootstrap_label content %}
+
+<header style="margin-top:-25px !important;">
+ <!-- Navbar -->
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-mdb-toggle="collapse"
+      data-mdb-target="#navbarExample01"
+      aria-controls="navbarExample01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarExample01">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:105px;">
+        <!-- add rotunda art -->
+        <img
+          src="/static/googleauthentication/images/rotunda-removebg-preview.png"
+          height="40"
+          alt="UVA search rotunda"
+          loading="lazy"
+        />
+        <li class="nav-item active">
+          <a class="nav-link" aria-current="page" href="/"><strong>Home</strong></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="searchPage"><strong>Search Courses</strong></a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'schedule' %}"><strong>Schedule</strong></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'friends' %}"><strong>Friends</strong></a>
+        </li>
+      </ul>
+    </div>
+    <!-- add my info to the right side of the nav bar-->
+    <div class="d-flex align-items-center">
+      <!-- notifications bar -->
+      <ul ul class="navbar-nav mb-2 mb-lg-0" style="margin-right:105px;">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'myInfo' %}"><strong>{{ user }}</strong></a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  </nav>
+</header>
+<br>
+  <!-- Navbar -->
+
+
+
+  <head>
+    <title>My Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+      .btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:focus, .btn-secondary:visited {
+        background-color: darkblue !important;}
+    </style>
+  </head>
+
+  <body style="
+  text-align: center;">
+    {% if user.is_authenticated %}
+      <div class="container">
+        <div class="row">
+          <div class="col-6"> <!-- COLUMN CONTAINS CURRENT USER INFORMATION-->
+            <!-- adding avatar -->
+            <!-- source: https://www.iconfinder.com/icons/745386/avatar_profile_profile_avatar_user_user_avatar_user_profile_icon -->
+            <div class="image_avatar" >
+              <img src="/static/googleauthentication/images/avatar.png" alt="default avatar" style="width:125px; height:auto">
+            </div>
+            <h1><p>{{ user }}</p></h1>
+            <strong>Email:</strong> {{ user.email }}<br><br>
+            <!--<p class="text-capitalize">{{ user }}</p></div> -->
+            <div style="text-align:left; margin:auto; width:50%;">
+              <h5 style="text-align:center; padding-bottom:0;"> User Information: </h5>
+              <strong>Year:</strong> {{ personal_info.year }} <br>
+              <strong>Major(s):</strong> {{ personal_info.major }}  <br>
+              <strong>Minor(s):</strong> {{ personal_info.minor }} <br>
+              <strong>Bio:</strong> {{ personal_info.bio }}   <br>
+            </div>
+            <br>
+            <button class="btn btn-secondary" onClick="window.location.href='accounts/logout'">Sign Out</button>
+          </div>
+          <div class="col-4"> <!-- COLUMN CONTAINS OPTIONS TO UPDATE USER INFORMATION-->
+            <div style="padding-top:125px; text-align:left;">
+              <div style="text-align:center;"><b>Update user information:</b></div><br>
+              <!-- update year -->
+              <form action="myInfo" method="POST">
+                {% csrf_token %}
+                <label for="year" class="form-label">Class year:</label>
+                <select class="form-select" name="year" id="year" aria-label="Default select example">
+                  <option selected value=""></option>
+                  <option value="First Year">First Year</option>
+                  <option value="Second Year">Second Year</option>
+                  <option value="Third Year">Third Year</option>
+                  <option value="Fourth Year">Fourth Year</option>
+                  <option value="Graduate">Graduate Student</option>
+                </select>
+                <!-- update major -->
+                <label for="major" class="form-label">Major(s):</label>
+                <input type="text" class="form-control" id="major" name="major"aria-describedby="majorInput">
+                <!-- update minor -->
+                <label for="minor" class="form-label" style="padding-top:5px;">Minor(s):</label>
+                <input type="text" class="form-control" id="minor" name="minor"aria-describedby="minorInput">
+                <!-- update bio -->
+                <label for="bio" class="form-label" style="padding-top:5px;">Bio:</label>
+                <input type="text" class="form-control" id="bio" name="bio"aria-describedby="minorInput"><br>
+                <button type="submit" class="btn btn-secondary">Update</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      Please sign in to view your personal information.
+    {% endif %}
+  </body>
+
+

@@ -1,0 +1,244 @@
+<!doctype html>
+{% load static %}
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% bootstrap_label content %}
+
+<!-- Navbar -->
+<header style="margin-top:-25px !important;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:105px;">
+          <!-- add rotunda art -->
+          <img
+            src="/static/googleauthentication/images/rotunda-removebg-preview.png"
+            height="40"
+            alt="UVA search rotunda"
+            loading="lazy"
+          />
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="/"><strong>Home</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="searchPage"><strong>Search Courses</strong></a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'schedule' %}"><strong>Schedule</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'friends' %}"><strong>Friends</strong></a>
+          </li>
+        </ul>
+      </div>
+      <!-- add my info to the right side of the nav bar-->
+      <div class="d-flex align-items-center">
+        <!-- notifications bar -->
+        <ul ul class="navbar-nav mb-2 mb-lg-0" style="margin-right:105px;">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'myInfo' %}"><strong>{{ user }}</strong></a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<br>
+  <!-- Navbar -->
+<head>
+  <!-- Styles -->
+  <title>Friends</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+  <!-- Or for RTL support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script >
+      $(document).ready(function() {
+          $('.js-example-basic-single').select2();
+      });
+  </script>
+  <style>
+    .btn-light, .btn-light:hover, .btn-light:active, .btn-light:focus, .btn-light:visited {
+      background-color: lightgray !important;
+    }
+  </style>
+</head>
+
+<body style="text-align: center;">
+
+  <h1>{{ user }}'s friends</h1>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <!-- clip art friends -->
+      <!-- source: https://www.freepik.com/premium-vector/cute-vector-friendship-clipart-hand-drawn-doodle-illustration-best-friends-smile_19979143.htm-->
+      <div class="image_avatar" >
+        <img src="/static/googleauthentication/images/friends.png" alt="default avatar" style="width:125px; height:auto">
+      </div>
+      <form action="{% url 'friends'  %}" method="POST">  <!-- this won't work until we develop a views function for it -->
+        {% csrf_token %}
+        <input type="hidden" name="current_user" value="{{ user }}">
+        <b><label for="friend_search">Add friends:</label></b> <br>
+        <select class="js-example-basic-single" name="friend_search" id="friend_search" style="width:250px;">
+          <option selected value=""></option>
+          {% for others in userList %}
+            {% if others.user != user %}
+              {% if others not in friendslist %} <!-- Does not show users that are already your friends -->
+                <option value="{{ others.user }}">{{ others.user }}</option>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+        </select> 
+        <!-- <input type="hidden" name="friend_username" value="{{ others.user }}"> -->
+       <!-- <button type="submit" class="btn btn-light">Add Friend</button> -->
+
+        <button type="button" class="btn btn-light" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Add Friend</button>
+    <!-- Adding warning message -->
+
+    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Warning!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="text-align:left;">
+        Once a friend is added, they cannot be unfriended. Do you wish to proceed?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Yes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      </form>
+    </div>
+    <!-- add friend filtering -->
+    <div class="col" style="text-align:center;">
+      <b> Filter Friends: </b>
+      <!-- filter by major, minor, year - allow input for selection -->
+      <form action="{% url 'friends' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="current_user" value="{{ user }}">
+        <div class="container" style="text-align:left;">
+          <div class="row">
+            <div class="col">
+              <!-- input major -->
+              <label for="major" class="form-label">By major(s):</label>
+              <input type="text" class="form-control" id="major" name="major"aria-describedby="majorInput">
+            </div>
+            <!-- input minor -->
+            <div class="col-5">
+              <label for="minor" class="form-label" style="padding-top:5px;">By minor(s):</label>
+              <input type="text" class="form-control" id="minor" name="minor"aria-describedby="minorInput">
+            </div>
+          </div>
+        </div>
+        <div class="container" style="padding-top:5px; text-align:left;">
+          <div class="row">
+            <div class="col-4">
+              <!-- input year -->
+              <label for="year" class="form-label">By year:</label>
+              <select class="form-select" name="year" id="year" aria-label="Default select example">
+                <option selected value=""></option>
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+                <option value="Fourth Year">Fourth Year</option>
+                <option value="Graduate">Graduate Student</option>
+              </select>
+            </div>
+            <div class="col-2">
+              <br>
+              <button type="submit" class="btn btn-light">Filter</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+  <hr>
+</div>
+
+<div>
+  <!-- Print added friends and their schedules-->
+  <h4>
+    Your friends:
+  </h4>
+  {% if friendslist %}
+    <!-- friendslist -->
+    <table style="
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%" class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Year</th>
+        <th scope="col">Major(s)</th>
+        <th scope="col">Minor(s)</th>
+        <th scope="col">Bio</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for friend in friendslist %}
+      <tr>
+        <td>
+          <form action="{% url 'friends_schedule' %}" method="POST">
+            {% csrf_token %}
+          <input type="hidden" name="friend_username" id="friend_username" value="{{ friend.name }}">
+          <small><button type="submit" class="btn btn-link" style="font-size:small; 
+          color:black;">{{ friend.name }}</button>
+          </small></form>
+        </td>
+        <td>
+          {{ friend.year }}
+        </td>
+        <td>
+          {{ friend.major }}
+        </td>
+        <td>
+          {{ friend.minor }}
+        </td>
+        <td>
+          {{ friend.bio }}
+        </td>
+      </tr>
+    {% endfor %}
+      </tbody>
+      </table>
+  {% else %}
+    No results found! Add friends or change your filtering.
+  {% endif %}
+  </div>
+
+</body>

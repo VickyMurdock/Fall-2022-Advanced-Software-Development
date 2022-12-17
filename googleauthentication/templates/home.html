@@ -1,0 +1,745 @@
+<!doctype html>
+{% load static %}
+
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% bootstrap_label content %}
+
+  <!-- Navbar -->
+<header style="margin-top:-25px !important;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:105px;">
+          <!-- add rotunda art -->
+          <img
+            src="/static/googleauthentication/images/rotunda-removebg-preview.png"
+            height="40"
+            alt="UVA search rotunda"
+            loading="lazy"
+          />
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="/"><strong>Home</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="searchPage"><strong>Search Courses</strong></a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'schedule' %}"><strong>Schedule</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'friends' %}"><strong>Friends</strong></a>
+          </li>
+        </ul>
+      </div>
+      <!-- add my info to the right side of the nav bar-->
+      <div class="d-flex align-items-center">
+        <!-- notifications bar -->
+        <ul ul class="navbar-nav mb-2 mb-lg-0" style="margin-right:105px;">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'myInfo' %}"><strong>{{ user }}</strong></a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<br>
+<!-- Navbar -->
+
+<head>
+    <title>New Lou's List</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      .btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:focus, .btn-secondary:visited {
+        background-color: darkblue !important;}
+    </style>
+</head>
+
+ <body style="text-align: center; margin:0px;">
+    {% load socialaccount %}
+    <div class="image_test" >
+      <img src="/static/googleauthentication/images/cville-panoramaOG.jpg" alt="UVA panoramic image">
+    </div>
+    <div class="col-xs-12" style="height:20px;"></div>  <!-- Adding vertical space -->
+    <h1 style="text-align:center; margin:0px;">New Lou's List: Home </h1>
+    <br>
+
+    {% if user.is_authenticated %}
+      You are successfully logged in with username <b>{{request.user.username}}</b>!
+    <div class="col-xs-12" style="height:10px;"></div>  <!-- Adding vertical space -->
+      <br>
+      <form action="{% provider_login_url 'google'%}?next=/">
+        <input type="submit" class="btn btn-secondary" value = "Sign in to a new account"/>
+      </form>
+      <div class="col-xs-12" style="height:10px;"></div>  <!-- Adding vertical space -->
+      <button class="btn btn-secondary" onClick="window.location.href='accounts/logout'">Sign Out</button>
+
+
+    {% else %}
+    <!-- TODO: Ask TA for guidance on improving appearance here -->
+       <form action="{% provider_login_url 'google'%}?next=/">
+        <input type="submit" class="btn btn-secondary" value = "Login with Google"/>
+      </form>
+    {% endif %}
+<br>
+
+    <div class="col-xs-12" style="height:20px;"></div>  <!-- Adding vertical space -->
+    <h2> Browse Courses</h2>
+
+    <p>
+      <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#byschool" aria-expanded="false" aria-controls="browsebyschool">
+        By School
+      </button>
+      <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#byprogram" aria-expanded="false" aria-controls="browsebyprogram">
+        By Seminar, Institute, Program
+      </button>
+    </p>
+    <!--BROWSE BY SCHOOL/DEPARTMENT-->
+    <div class="collapse" id="byschool">
+      <div class="card card-body">
+          <h3>Browse by School</h3> <br>
+          <div style="width:80%;
+            margin-left:auto;
+            margin-right:auto;" class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Arts and Sciences
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <br><b>Departments</b>
+                  <div class="accordion-body">
+                    <table style="table-layout: fixed;" class="table table-bordered">
+                      <form action="{% url 'classList'  %}" method="post" id="departments">
+                        {% csrf_token %}
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="AAS" >African-American & African Studies</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="AMST">American Studies</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ANTH">Anthropology</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ARAD">Art</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ASTR">Astronomy</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="BIOL">Biology</button>
+
+                          </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CHEM">Chemistry</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CLAS">Classics</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="DRAM">Drama</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EALC">East Asian Language, Literature, and Cultures</button></td>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ECON">Economics</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ENGL">English</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EVSC">Environmental Sciences</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="FREN">French Language and Literature</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="GERM">German Language and Literature</button>                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="HIST">History</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MATH">Mathematics</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MDST">Media Studies</button>                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CHEM">Middle Eastern and South Asian Languages and Culture</Button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MUSI">Music</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PHIL">Philosophy</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PHYS">Physics</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PLAP">Politics</button>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PHS">Public Health Sciences</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PSYC">Psychology</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="RELA">African Religious Studies</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="LNGS">Slavic Languages and Literature</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="SOC">Sociology</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="SPAN">Spanish</button>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="STAT">Statistics</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="WGS">Women, Gender, and Sexuality</button>
+
+                          <td></td>
+
+                          <td></td>
+
+                        </tr>
+
+                        </tr>
+
+                      </tbody>
+
+                    </table>
+
+                  </div>
+
+                </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+              <h2 class="accordion-header" id="headingTwo">
+
+                <button    class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+
+                  Engineering and Applied Sciences
+
+                </button>
+
+              </h2>
+
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+
+                <br><b>Departments</b>
+
+                <div class="accordion-body">
+
+                </form>
+
+                  <table style="table-layout: fixed;" class="table table-bordered">
+
+                    <tbody>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="APMA">Applied Mathematics</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="BME">Biomedical Engineering</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CHE">Chemical Engineering</button>
+
+
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CE">Civil Engineering</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CS">Computer Science</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CE">Systems and Information Engineering</button>
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ECE">Electrical and Computer Engineering</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MSE">Materials Science and Engineering</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MAE">Mechanical and Aerospace Engineering</button>
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="STS">Science Technology and Society</button>
+
+                        <td></td>
+
+                        <td></td>
+
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+              <h2 class="accordion-header" id="headingThree">
+
+                <button   class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+
+                  Education and Human Development
+
+                </button>
+
+              </h2>
+
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+
+                <br><b>Departments</b>
+
+                <div class="accordion-body">
+
+                  <table style="table-layout: fixed;" class="table table-bordered">
+
+                    <tbody>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EDIS">Curriculum, Instruction, and Special Education</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EDLF">Education Leadership, Foundations, and Policy</button>
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EDHF">Human Services</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="KINE">Kinesiology</button>
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="KLPA">Lifetime Physical Activity</button>
+
+                        <td></td>
+
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+              <h2 class="accordion-header" id="headingFour">
+
+                <button   class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+
+                  Continuing and Professional Studies
+
+                </button>
+
+              </h2>
+
+              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+
+                <br><h5>Degree Programs</h5>
+
+                <div class="accordion-body">
+
+                  <table style="table-layout: fixed;" class="table table-bordered">
+
+                    <tbody>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="INST">Bachelor of Interdisciplinary Studies</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="HHE">Bachelor of Professional Studies in Health Sciences Management</button>
+
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                <br><h5>Certificate Programs</h5><br>
+
+
+
+                <b>Undergraduate</b>
+
+                <table style="table-layout: fixed;" class="table table-bordered">
+
+                  <tbody>
+
+                    <tr>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="SEC">Cybersecurity Analysis</button>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="FED">Federal Acquisition</button>
+
+                    </tr>
+
+                    <tr>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="IT">Information Technology</button>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="HR">Leadership in Human Resources Management</button>
+
+                    </tr>
+
+                  </tbody>
+
+                </table>
+
+                <b>Graduate</b>
+
+                <table style="table-layout: fixed;" class="table table-bordered">
+
+                  <tbody>
+
+                    <tr>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ACCT">Acconting</button>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="SEC">Cybersecurity Management</button>
+
+                    </tr>
+
+                    <tr>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PSHM">Health Sciences Management</button>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PSLP">Leadership</button>
+
+                    </tr>
+
+                    <tr>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PC">Procurement and Contracts Management</button>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PSPM">Project Management</button>
+
+                    </tr>
+
+                    <tr>
+
+                      <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PSPA">Public Administration</button>
+
+                      <td></td>
+
+                    </tr>
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+              </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+              <h2 class="accordion-header" id="headingFive">
+
+                <button    class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+
+                  Other Schools
+
+                </button>
+
+              </h2>
+
+              <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+
+                <div class="accordion-body">
+
+                  <table style="table-layout: fixed;" class="table table-bordered">
+
+                    <tbody>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ARCH">Architecture</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="GBAC">Business (Darden School)</button>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="GBAC">Commerce (McIntire School)</button>
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="LPPP">Public Policy (Batten School)</button>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="DS">Data Science</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="INST">Interdisciplinary Studies</button>
+
+                      </tr>
+
+                      <tr>
+
+                        <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="LAW">Law School</button>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MED">Medical School</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="NURS">Nursing</button>
+
+                      </tr>
+
+
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!--BROWSE BY PROGRAM/SEMINAR-->
+
+    <div class="collapse" id="byprogram">
+
+      <div class="card card-body">
+
+        <h3>Browse by Seminars, Institutes, and Programs</h3> <br>
+
+          <div style="width:80%;
+
+            margin-left:auto;
+
+            margin-right:auto;" class="accordion" id="accordionExample">
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header" id="headingOne">
+
+                  <button   class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+
+                    Arts and Sciences Programs, Seminars, and Institutes
+
+                  </button>
+
+                </h2>
+
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+
+                      <div class="accordion-body">
+
+                        <table style="table-layout: fixed;" class="table table-bordered">
+
+                          <tbody>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ASL">American Sign Language</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ARCY">Archaeology</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="COGS">Cognitive Science</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="COLA">College Advising Seminar</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="CS">Computer Science</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ENCW">Creative Writing</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EDIS">Disability Studies Initiative</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EAST">East Asian Studies</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ELA">Engaging the Liberal Arts</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="ETP">Environmental Thought and Practice</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EURS">European Studies</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="GSGS">Global Studies</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="INST">Interdisciplinary Studies</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="JWST">Jewish Studies</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="LAST">Latin American Studies</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="LASE">Liberal Arts Seminars</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="LING">Linguistics</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MSP">Medieval Studies</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="HIME">Middle Eastern Studies</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="NESC">Neuroscience</button>
+
+                                  <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="PPL">Political Philosophy, Policy and Law</button>
+
+                            </tr>
+
+                            <tr>
+
+                              <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="SATR">South Asian Studies</button>
+
+                                <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="USEM">University Seminars</button>
+
+                              <td></td>
+
+                            </tr>
+
+                          </tbody>
+
+                        </table>
+
+                  </div>
+
+                </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+              <h2 class="accordion-header" id="headingTwo">
+
+                <button    class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+
+                  ROTC Programs
+
+                </button>
+
+              </h2>
+
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+
+                <div class="accordion-body">
+
+                    <table style="table-layout: fixed;" class="table table-bordered">
+
+                      <tbody>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="AIRS">Air Science</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="MISC">Military Science</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="NASC">Naval Science</button>
+
+                            <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="UNST">University Studies</button>
+
+                        </tr>
+
+                        <tr>
+
+                          <td> <button  class="btn btn-light"  name ="department" type="submit" form="departments" value="EDLF">Youth and Social Innovation</button>
+
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+              
+          </div>
+      </div>
+    </div>
+ </body>
+
+

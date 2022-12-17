@@ -1,0 +1,206 @@
+<!doctype html>
+{% load static %}
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+
+{% bootstrap_label content %}
+
+
+<!-- Navbar -->
+<header style="margin-top:-25px !important;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:105px;">
+          <!-- add rotunda art -->
+          <img
+            src="/static/googleauthentication/images/rotunda-removebg-preview.png"
+            height="40"
+            alt="UVA search rotunda"
+            loading="lazy"
+          />
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="/"><strong>Home</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="searchPage"><strong>Search Courses</strong></a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'schedule' %}"><strong>Schedule</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'friends' %}"><strong>Friends</strong></a>
+          </li>
+        </ul>
+      </div>
+      <!-- add my info to the right side of the nav bar-->
+      <div class="d-flex align-items-center">
+        <!-- notifications bar -->
+        <ul ul class="navbar-nav mb-2 mb-lg-0" style="margin-right:105px;">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'myInfo' %}"><strong>{{ user }}</strong></a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<br>
+
+<!-- The Query Set[] -->
+<!-- {{ list_of_classes }} -->
+
+<!-- Insert Profile Picture ... -->
+<head>
+  <title>Schedule Builder</title>
+  <style>
+    h1 {text-align: center;}
+    p {text-align: center;}
+    div {text-align: center;}
+    body {text-align: center;}
+    .btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:focus, .btn-secondary:visited {
+      background-color: darkblue !important;}
+  </style>
+</head>
+<body>
+  <h5><p>{{ user }}</p></h5>
+<h1> My Schedule </h1>
+<!-- COMMENTING -->
+<!--check base code to see if it works-->
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel">Comments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height:100vh">
+        {% if comments %}
+          {% for comment in comments %}
+            {% if comment.author == user %}   <!-- functionality where user sees their comments in a different color from others -->
+              <div class="rounded" style="height:min-content; width:100%; text-align:left; border: 1px solid lightgrey; margin-bottom: 5px; background-color: rgba(102, 102, 139, 0.1);">
+                <form action="{% url 'friends_schedule' %}" method="POST">
+                  <input type="hidden" name="friend_username" id="friend_username" value="{{ comment.author }}">
+                  {% csrf_token %}
+                  <small><button type="submit" class="btn btn-link" style="font-size:small; 
+                  color:black;">{{ comment.author }}</button>at {{ comment.created_on }}</small><br>
+                  <div style="text-align:left; margin-left:11px;">
+                    {{ comment.comment_text }} 
+                  </div>
+                </form>
+              </div>
+            {% else %}
+              <div class="rounded" style="height:min-content; width:100%; text-align:left; border: 1px solid lightgrey; margin-bottom: 5px; background-color: rgba(0, 0, 255, 0.1);">
+                <form action="{% url 'friends_schedule' %}" method="POST">
+                  <input type="hidden" name="friend_username" id="friend_username" value="{{ comment.author }}">
+                  {% csrf_token %}
+                  <small><button type="submit" class="btn btn-link" style="font-size:small; 
+                  color:black;">{{ comment.author }}</button>at {{ comment.created_on }}</small><br>
+                  <div style="text-align:left; margin-left:11px;">
+                    {{ comment.comment_text }} 
+                  </div>
+                </form>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <small><i>No comments here yet!</i></small>
+        {% endif %}
+      </div>
+      <div class="modal-footer" style="text-align:left;">
+        <form action="{% url 'schedule' %}" method="POST">
+          {% csrf_token %} 
+          <input type="hidden" name="friend_username" id="friend_username" value="{{ user }}">
+          <input type="text" name="posted_comment" id="posted_comment" style="width:400px" aria-describedby="button-addon2" placeholder="Leave a comment"/>      
+          <button type="button" class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Warning!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="text-align:left;">
+        Once posted, you cannot delete your comment. Do you wish to proceed?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Yes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" style="font-size:small; color:black;">Comments</button>
+
+{% for key, value in courses.items %}
+  {% if value %}
+    <h3 style="margin-left:75px;
+      text-align: left;">{{ key }}</h3>
+
+    <table style="
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%" class="table">
+      <thead>
+        <tr>
+          <th scope="col" style="width:300px;">Name</th>
+          <th scope="col" style="width:300px;">Section</th>
+          <th scope="col" style="width:50px;">Component/Units</th>
+          <th scope="col" style="width:200px;">Instructor</th>
+          <th scope="col" style="width:150px;">Meetings</th>
+          <th scope="col" style="width:200px;">Location</th>
+          <th scope="col" style="width:200px;">Remove Course</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for class in value %}
+          <tr>
+            <td><b>{{ class.name }}</b></td>
+            {% if class.topic %}
+              <td>{{ class.section }} <b>{{class.topic}}</b></td>
+            {% else %}
+              <td>{{ class.section }} </td>
+            {% endif %}
+            <td>{{ class.component }} ({{ class.units  }} units)</td>
+            <td>{{ class.instructor }}</td>
+            <td>{{ class.days }} {{ class.times }}</td>
+            <td>{{ class.location }}</td>
+            <td style="text-align:center;">
+              <form action="{% url 'schedule' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="course_name" value="{{ class.name }}">
+                <input type="hidden" name="course_section" value="{{ class.section }}">
+                <input type="hidden" name="delete_bool" value="True">
+              <button type="submit" class="btn btn-secondary" style="width:180px;"><small>Remove from Schedule</small></button>
+            </form>
+            </td>
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endfor %}
+
+</body>

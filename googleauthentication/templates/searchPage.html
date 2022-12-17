@@ -1,0 +1,379 @@
+<!doctype html>
+{% load static %}
+
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% bootstrap_label content %}
+
+  <!-- Navbar -->
+<header style="margin-top:-25px !important;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-0">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:105px;">
+          <!-- add rotunda art -->
+          <img
+            src="/static/googleauthentication/images/rotunda-removebg-preview.png"
+            height="40"
+            alt="UVA search rotunda"
+            loading="lazy"
+          />
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="/"><strong>Home</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="searchPage"><strong>Search Courses</strong></a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'schedule' %}"><strong>Schedule</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'friends' %}"><strong>Friends</strong></a>
+          </li>
+        </ul>
+      </div>
+      <!-- add my info to the right side of the nav bar-->
+      <div class="d-flex align-items-center">
+        <!-- notifications bar -->
+        <ul ul class="navbar-nav mb-2 mb-lg-0" style="margin-right:105px;">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'myInfo' %}"><strong>{{ user }}</strong></a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<br>
+<!-- Navbar -->
+
+<head>
+    <title>Search Page</title>
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <!-- Or for RTL support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script >
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+  <style>
+    .btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:focus, .btn-secondary:visited {
+      background-color: darkblue !important;
+    }
+    .btn-light, .btn-light:hover, .btn-light:active, .btn-light:focus, .btn-light:visited {
+      background-color: lightgray !important;
+    }
+    input[type=radio] {
+      accent-color: darkorange;
+    }
+  </style>
+  </head>
+ <body style="text-align:center">
+    <div class="image_test" >
+      <img src="/static/googleauthentication/images/cville-panorama.jpg" alt="UVA panoramic image">
+    </div>
+    <br>
+    <div style="text-align: center;">
+      <form action="{% url 'classList'  %}" method="post">
+        {% csrf_token %}
+      <b><label for="department">Subject:</label></b> <br>
+      <select class="js-example-basic-single" name="department" id="department" style="width:200px;">
+        <option value=ACCT>ACCT</option>
+        <option value=AIRS>AIRS</option>
+        <option value=ALAR>ALAR</option>
+        <option value=AM>AM</option>
+        <option value=AMST>AMST</option>
+        <option value=ANTH>ANTH</option>
+        <option value=APMA>APMA</option>
+        <option value=ARAB>ARAB</option>
+        <option value=ARAD>ARAD</option>
+        <option value=ARAH>ARAH</option>
+        <option value=ARCH>ARCH</option>
+        <option value=ARCY>ARCY</option>
+        <option value=ARH>ARH</option>
+        <option value=ARTH>ARTH</option>
+        <option value=ARTR>ARTR</option>
+        <option value=ARTS>ARTS</option>
+        <option value=ASL>ASL</option>
+        <option value=ASTR>ASTR</option>
+        <option value=BIMS>BIMS</option>
+        <option value=BIOC>BIOC</option>
+        <option value=BIOL>BIOL</option>
+        <option value=BIOP>BIOP</option>
+        <option value=BME>BME</option>
+        <option value=BUS>BUS</option>
+        <option value=CASS>CASS</option>
+        <option value=CE>CE</option>
+        <option value=CELL>CELL</option>
+        <option value=CHE>CHE</option>
+        <option value=CHEM>CHEM</option>
+        <option value=CHIN>CHIN</option>
+        <option value=CHTR>CHTR</option>
+        <option value=CLAS>CLAS</option>
+        <option value=COGS>COGS</option>
+        <option value=COLA>COLA</option>
+        <option value=COMM>COMM</option>
+        <option value=CONC>CONC</option>
+        <option value=CPE>CPE</option>
+        <option value=CREO>CREO</option>
+        <option value=CS>CS</option>
+        <option value=DANC>DANC</option>
+        <option value=DEM>DEM</option>
+        <option value=DH>DH</option>
+        <option value=DRAM>DRAM</option>
+        <option value=DS>DS</option>
+        <option value=EALC>EALC</option>
+        <option value=EAST>EAST</option>
+        <option value=ECE>ECE</option>
+        <option value=ECON>ECON</option>
+        <option value=EDHS>EDHS</option>
+        <option value=EDIS>EDIS</option>
+        <option value=EDLF>EDLF</option>
+        <option value=EDNC>EDNC</option>
+        <option value=EGMT>EGMT</option>
+        <option value=ELA>ELA</option>
+        <option value=ENCW>ENCW</option>
+        <option value=ENGL>ENGL</option>
+        <option value=ENGR>ENGR</option>
+        <option value=ENTP>ENTP</option>
+        <option value=ENWR>ENWR</option>
+        <option value=ESL>ESL</option>
+        <option value=ETP>ETP</option>
+        <option value=EURS>EURS</option>
+        <option value=EVAT>EVAT</option>
+        <option value=EVEC>EVEC</option>
+        <option value=EVGE>EVGE</option>
+        <option value=EVHY>EVHY</option>
+        <option value=EVSC>EVSC</option>
+        <option value=FREN>FREN</option>
+        <option value=GBAC>GBAC</option>
+        <option value=GBUS>GBUS</option>
+        <option value=GCCS>GCCS</option>
+        <option value=GCNL>GCNL</option>
+        <option value=GCOM>GCOM</option>
+        <option value=GDS>GDS</option>
+        <option value=GERM>GERM</option>
+        <option value=GETR>GETR</option>
+        <option value=GHSS>GHSS</option>
+        <option value=GNUR>GNUR</option>
+        <option value=GREE>GREE</option>
+        <option value=GSAS>GSAS</option>
+        <option value=GSCI>GSCI</option>
+        <option value=GSGS>GSGS</option>
+        <option value=GSMS>GSMS</option>
+        <option value=GSSJ>GSSJ</option>
+        <option value=GSVS>GSVS</option>
+        <option value=HBIO>HBIO</option>
+        <option value=HEBR>HEBR</option>
+        <option value=HHE>HHE</option>
+        <option value=HIAF>HIAF</option>
+        <option value=HIEA>HIEA</option>
+        <option value=HIEU>HIEU</option>
+        <option value=HILA>HILA</option>
+        <option value=HIME>HIME</option>
+        <option value=HIND>HIND</option>
+        <option value=HISA>HISA</option>
+        <option value=HIST>HIST</option>
+        <option value=HIUS>HIUS</option>
+        <option value=HR>HR</option>
+        <option value=HSCI>HSCI</option>
+        <option value=IMP>IMP</option>
+        <option value=INST>INST</option>
+        <option value=ISBU>ISBU</option>
+        <option value=ISHU>ISHU</option>
+        <option value=ISIN>ISIN</option>
+        <option value=ISLS>ISLS</option>
+        <option value=ISSS>ISSS</option>
+        <option value=IT>IT</option>
+        <option value=ITAL>ITAL</option>
+        <option value=ITTR>ITTR</option>
+        <option value=JAPN>JAPN</option>
+        <option value=JPTR>JPTR</option>
+        <option value=KICH>KICH</option>
+        <option value=KINE>KINE</option>
+        <option value=KLPA>KLPA</option>
+        <option value=KOR>KOR</option>
+        <option value=LAR>LAR</option>
+        <option value=LASE>LASE</option>
+        <option value=LAST>LAST</option>
+        <option value=LATI>LATI</option>
+        <option value=LAW>LAW</option>
+        <option value=LING>LING</option>
+        <option value=LNGS>LNGS</option>
+        <option value=LPPA>LPPA</option>
+        <option value=LPPL>LPPL</option>
+        <option value=LPPP>LPPP</option>
+        <option value=LPPS>LPPS</option>
+        <option value=MAE>MAE</option>
+        <option value=MATH>MATH</option>
+        <option value=MDST>MDST</option>
+        <option value=MED>MED</option>
+        <option value=MESA>MESA</option>
+        <option value=MICR>MICR</option>
+        <option value=MISC>MISC</option>
+        <option value=MSE>MSE</option>
+        <option value=MSP>MSP</option>
+        <option value=MUBD>MUBD</option>
+        <option value=MUEN>MUEN</option>
+        <option value=MUPF>MUPF</option>
+        <option value=MUSI>MUSI</option>
+        <option value=NASC>NASC</option>
+        <option value=NCPR>NCPR</option>
+        <option value=NESC>NESC</option>
+        <option value=NUCO>NUCO</option>
+        <option value=NUIP>NUIP</option>
+        <option value=NURS>NURS</option>
+        <option value=PATH>PATH</option>
+        <option value=PC>PC</option>
+        <option value=PERS>PERS</option>
+        <option value=PETR>PETR</option>
+        <option value=PHAR>PHAR</option>
+        <option value=PHIL>PHIL</option>
+        <option value=PHS>PHS</option>
+        <option value=PHY>PHY</option>
+        <option value=PHYS>PHYS</option>
+        <option value=PLAC>PLAC</option>
+        <option value=PLAD>PLAD</option>
+        <option value=PLAN>PLAN</option>
+        <option value=PLAP>PLAP</option>
+        <option value=PLCP>PLCP</option>
+        <option value=PLIR>PLIR</option>
+        <option value=PLPT>PLPT</option>
+        <option value=POL>POL</option>
+        <option value=PORT>PORT</option>
+        <option value=POTR>POTR</option>
+        <option value=PPL>PPL</option>
+        <option value=PSHM>PSHM</option>
+        <option value=PSLP>PSLP</option>
+        <option value=PSPA>PSPA</option>
+        <option value=PSPM>PSPM</option>
+        <option value=PSPS>PSPS</option>
+        <option value=PST>PST</option>
+        <option value=PSYC>PSYC</option>
+        <option value=RELA>RELA</option>
+        <option value=RELB>RELB</option>
+        <option value=RELC>RELC</option>
+        <option value=RELG>RELG</option>
+        <option value=RELH>RELH</option>
+        <option value=RELI>RELI</option>
+        <option value=RELJ>RELJ</option>
+        <option value=RELS>RELS</option>
+        <option value=RUSS>RUSS</option>
+        <option value=RUTR>RUTR</option>
+        <option value=SANS>SANS</option>
+        <option value=SARC>SARC</option>
+        <option value=SAST>SAST</option>
+        <option value=SATR>SATR</option>
+        <option value=SEC>SEC</option>
+        <option value=SLAV>SLAV</option>
+        <option value=SLTR>SLTR</option>
+        <option value=SOC>SOC</option>
+        <option value=SPAN>SPAN</option>
+        <option value=STAT>STAT</option>
+        <option value=STS>STS</option>
+        <option value=SWAH>SWAH</option>
+        <option value=SYS>SYS</option>
+        <option value=TURK>TURK</option>
+        <option value=UD>UD</option>
+        <option value=UNST>UNST</option>
+        <option value=URDU>URDU</option>
+        <option value=USEM>USEM</option>
+        <option value=WGS>WGS</option>
+      </select> <br>
+      <small><i>This is required input!</i></small> 
+    </div>
+    <br>
+    <div class="container" style="width:400px; height:min-content">
+      <div class="row">
+        <div class="col" id="catalog_filtering">
+          <form action="{% url 'classList'  %}" method="post">
+            {% csrf_token %}
+            <b><label for="catalog_num">Catalog Number</label></b> <br>
+            <input style="width:100px;" type="number" id="catalog_num" name="catalog_num">
+        </div>
+        <div class="col" id="date_filtering">
+          <form action="{% url 'classList'  %}" method="post">
+            {% csrf_token %}
+            <script type="text/javascript">
+              $(document).ready(function() {
+                $('.js-example-basic-multiple').select2();
+              });
+            </script>
+            <b><label for="days_held">Days Held</label></b> <br>
+            <select style="width:200px;" class="js-example-basic-multiple" name="days_held" id="days_held" multiple="multiple">
+              <option value="Mo">Monday</option>
+              <option value="Tu">Tuesday</option>
+              <option value="We">Wednesday</option>
+              <option value="Th">Thursday</option>
+              <option value="Fr">Friday</option>
+              <option value="Sa">Saturday</option>
+              <option value="Su">Sunday</option>
+            </select> <br>
+            <small><i>Select the exact combination of days.</i></small>
+        </div>
+      </div>
+    </div>
+    <br>
+    <form action="{% url 'classList'  %}" method="post">
+      {% csrf_token %}
+      <b><label for="grad_filter">Display:</label></b> <br>
+      <div class="btn-group btn-group-toggle" name="grad_filter" id="grad_filter" data-toggle="buttons">
+        <label class="btn btn-secondary">
+          <input type="radio" autocomplete="off" name="grad_filter" id="grad_filter" value="undergrad"> Undergraduate Only
+        </label>
+        <label class="btn btn-secondary">
+          <input type="radio" autocomplete="off" name="grad_filter" id="grad_filter" value="grad"> Graduate Only
+        </label>
+        <label class="btn btn-secondary active">
+          <input type="radio" autocomplete="off" name="grad_filter" id="grad_filter" value="both" checked> Both
+        </label>
+      </div>
+
+    <br><br>
+  <button type="submit" class="btn btn-dark">Search Classes</button>
+  </form>
+
+{% if messages %}
+<ul>
+   {% for message in messages %}
+       <!-- <li{% if message.tags %} class="{{ message.tags }}"{% endif %}></li>-->
+        {% if message.tags %}{% endif %}
+        <!--<li{% if message.tags %} class="Please enter course"{% endif %}>{{ message }}</li>-->
+  {% endfor %}
+ </ul>
+    {% endif %}
+
+</div>
+</div>
+ </body>
+
+
+
+
+

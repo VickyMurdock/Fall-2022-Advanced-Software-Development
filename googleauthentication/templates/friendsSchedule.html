@@ -1,0 +1,195 @@
+<!doctype html>
+{% load static %}
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+
+{% bootstrap_label content %}
+
+
+<!-- Navbar -->
+<header style="margin-top:-25px !important;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:105px;">
+          <!-- add rotunda art -->
+          <img
+            src="/static/googleauthentication/images/rotunda-removebg-preview.png"
+            height="40"
+            alt="UVA search rotunda"
+            loading="lazy"
+          />
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="/"><strong>Home</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="searchPage"><strong>Search Courses</strong></a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'schedule' %}"><strong>Schedule</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'friends' %}"><strong>Friends</strong></a>
+          </li>
+        </ul>
+      </div>
+      <!-- add my info to the right side of the nav bar-->
+      <div class="d-flex align-items-center">
+        <!-- notifications bar -->
+        <ul ul class="navbar-nav mb-2 mb-lg-0" style="margin-right:105px;">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'myInfo' %}"><strong>{{ user }}</strong></a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<br>
+
+<head>
+  <title>Schedule</title>
+  <style>
+    h1 {text-align: center;}
+    p {text-align: center;}
+    body {text-align: center;}
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h3>{{ friend }}'s schedule</h3>
+<div class="container">
+  <div class="row" style="height:75vh">
+    <div class="col-8 overflow-auto" style="height: 75vh">
+      {% for key, value in courses.items %}
+        {% if value %}
+          <h3 style="margin-left:75px;
+            text-align: left;">{{ key }}</h3>
+
+          <table style="
+          margin-left: auto;
+          margin-right: auto;
+          width: 90%" class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Section</th>
+                <th scope="col">Component/Units</th>
+                <th scope="col">Instructor</th>
+                <th scope="col">Meetings</th>
+                <th scope="col">Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for class in value %}
+                <tr>
+                  <td><b>{{ class.name }}</b></td>
+                  {% if class.topic %}
+                    <td>{{ class.section }} <b>{{class.topic}}</b></td>
+                  {% else %}
+                    <td>{{ class.section }} </td>
+                  {% endif %}
+                  <td>{{ class.component }} ({{ class.units  }} units)</td>
+                  <td>{{ class.instructor }}</td>
+                  <td>{{ class.days }} {{ class.times }}</td>
+                  <td>{{ class.location }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col">
+      <div class="row" style="height:90%; text-align:left;">
+        <h4 style="text-align: left; ">Comments</h4>
+        <!-- test comment dumping -->
+        <div class="position-relative overflow-auto" style="height:60vh; width:100%">
+          {% if comments %}
+            {% for comment in comments %}
+              {% if comment.author == user %} <!-- functionality where user sees their comments in a different color from others -->
+                <div class="rounded" style="background-color: rgba(102, 102, 139, 0.1); height:min-content; width:100%; border: 1px solid lightgrey; margin-bottom: 5px;">
+                  <form action="{% url 'schedule' %}" method="GET">
+                    {% csrf_token %}
+                    <small><button type="submit" class="btn btn-link" style="font-size:small; color:black;">{{ comment.author }}</button>at {{ comment.created_on }}</small><br>
+                    <div style="margin-left:15px;">
+                      {{ comment.comment_text }} 
+                    </div>
+                  </form>
+                </div>
+              {% else %}
+                <div class="rounded" style="background-color: rgba(0, 0, 255, 0.1); height:min-content; width:100%; border: 1px solid lightgrey; margin-bottom: 5px;">
+                  <form action="{% url 'friends_schedule' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="friend_username" id="friend_username" value="{{ comment.author }}">
+                    <small><button type="submit" class="btn btn-link" style="font-size:small; color:black;">{{ comment.author }}</button>at {{ comment.created_on }}</small><br>
+                    <div style="margin-left:15px;">
+                      {{ comment.comment_text }} 
+                    </div>
+                  </form>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <small><i>No comments here yet!</i></small>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row" style="height:10%; text-align:left;">
+      <!-- create form to add comments (bottom of page) -->
+        <small><i>Leave a comment:</i></small>
+        <div class="input-group mb-3">
+          <form action="{% url 'friends_schedule' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="friend_username" id="friend_username" value="{{ friend }}">
+            <input type="text" name="posted_comment" id="posted_comment" style="width:350px" aria-describedby="button-addon2"/>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CommentWarning">
+              Post
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="CommentWarning" tabindex="-1" aria-labelledby="CommentWarningLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="CommentWarningLabel">Comment Warning</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    Once posted, you cannot delete your comment. Do you wish to proceed?
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
